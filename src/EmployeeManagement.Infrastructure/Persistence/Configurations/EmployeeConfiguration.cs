@@ -1,8 +1,9 @@
 using EmployeeManagement.Domain.EmployeeRoot;
+using EmployeeManagement.Infrastructure.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EmployeeManagement.Infrastructure.Persistence;
+namespace EmployeeManagement.Infrastructure.Persistence.Configurations;
 
 internal sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 {
@@ -11,7 +12,7 @@ internal sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.ToTable("Employees");
 
         builder.HasKey(employee => employee.Id);
-        builder.Property(employee => employee.Id).ValueGeneratedNever();
+        builder.Property(employee => employee.Id).ValueGeneratedOnAdd();
 
         builder.Property(employee => employee.FullName)
             .HasMaxLength(200)

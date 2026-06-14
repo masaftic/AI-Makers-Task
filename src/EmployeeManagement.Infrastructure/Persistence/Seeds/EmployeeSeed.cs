@@ -1,19 +1,17 @@
 using EmployeeManagement.Domain.EmployeeRoot;
 
-namespace EmployeeManagement.Infrastructure.Persistence;
+namespace EmployeeManagement.Infrastructure.Persistence.Seeds;
 
 internal static class EmployeeSeed
 {
-    private static readonly Guid EngineeringDepartmentId =
-        Guid.Parse("10000000-0000-0000-0000-000000000001");
+    private const int EngineeringDepartmentId = 1;
 
-    private static readonly Guid PeopleDepartmentId =
-        Guid.Parse("10000000-0000-0000-0000-000000000002");
+    private const int PeopleDepartmentId = 2;
 
     public static readonly Employee[] All =
     [
         Employee.Create(
-            Guid.Parse("20000000-0000-0000-0000-000000000001"),
+            1,
             "Mona Hassan",
             EmailAddress.Create("mona.hassan@example.com"),
             MobileNumber.Create("+201001112233"),
@@ -22,7 +20,7 @@ internal static class EmployeeSeed
             new DateOnly(2022, 3, 14),
             true),
         Employee.Create(
-            Guid.Parse("20000000-0000-0000-0000-000000000002"),
+            2,
             "Omar Khalil",
             EmailAddress.Create("omar.khalil@example.com"),
             MobileNumber.Create("+201002223344"),
@@ -31,7 +29,7 @@ internal static class EmployeeSeed
             new DateOnly(2023, 7, 2),
             true),
         Employee.Create(
-            Guid.Parse("20000000-0000-0000-0000-000000000003"),
+            3,
             "Nour Adel",
             EmailAddress.Create("nour.adel@example.com"),
             MobileNumber.Create("+201003334455"),

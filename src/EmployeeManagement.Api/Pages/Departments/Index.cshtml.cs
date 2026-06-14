@@ -23,7 +23,7 @@ public sealed class IndexModel(IDepartmentService departmentService) : PageModel
     }
 
     public async Task<IActionResult> OnPostDeleteAsync(
-        Guid id,
+        int id,
         CancellationToken cancellationToken)
     {
         var result = await departmentService.DeleteAsync(id, cancellationToken);

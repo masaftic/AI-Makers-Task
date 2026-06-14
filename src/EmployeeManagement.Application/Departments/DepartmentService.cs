@@ -8,11 +8,11 @@ namespace EmployeeManagement.Application.Departments;
 
 public interface IDepartmentService
 {
-    Task<Result<Guid>> CreateAsync(SaveDepartmentDto input, CancellationToken cancellationToken = default);
-    Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Result<int>> CreateAsync(SaveDepartmentDto input, CancellationToken cancellationToken = default);
+    Task<Result> DeleteAsync(int id, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<DepartmentDto>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<DepartmentDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<Result> UpdateAsync(Guid id, SaveDepartmentDto input, CancellationToken cancellationToken = default);
+    Task<DepartmentDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<Result> UpdateAsync(int id, SaveDepartmentDto input, CancellationToken cancellationToken = default);
 }
 
 public sealed class DepartmentService(IAppDbContext db) : IDepartmentService
@@ -28,7 +28,7 @@ public sealed class DepartmentService(IAppDbContext db) : IDepartmentService
     }
 
     public async Task<DepartmentDto?> GetByIdAsync(
-        Guid id,
+        int id,
         CancellationToken cancellationToken = default)
     {
         return await db.Departments
@@ -38,7 +38,7 @@ public sealed class DepartmentService(IAppDbContext db) : IDepartmentService
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Result<Guid>> CreateAsync(
+    public async Task<Result<int>> CreateAsync(
         SaveDepartmentDto input,
         CancellationToken cancellationToken = default)
     {
@@ -52,7 +52,7 @@ public sealed class DepartmentService(IAppDbContext db) : IDepartmentService
                 "A department with this name already exists.");
         }
 
-        var department = Department.Create(Guid.NewGuid(), name);
+        var department = Department.Create(0, name);
 
         await db.Departments.AddAsync(department, cancellationToken);
         await db.SaveChangesAsync(cancellationToken);
@@ -61,7 +61,7 @@ public sealed class DepartmentService(IAppDbContext db) : IDepartmentService
     }
 
     public async Task<Result> UpdateAsync(
-        Guid id,
+        int id,
         SaveDepartmentDto input,
         CancellationToken cancellationToken = default)
     {
@@ -86,7 +86,7 @@ public sealed class DepartmentService(IAppDbContext db) : IDepartmentService
     }
 
     public async Task<Result> DeleteAsync(
-        Guid id,
+        int id,
         CancellationToken cancellationToken = default)
     {
         var department = await db.Departments.FindByIdAsync(id, cancellationToken);
@@ -97,7 +97,7 @@ public sealed class DepartmentService(IAppDbContext db) : IDepartmentService
 
         db.Departments.Remove(department);
         await db.SaveChangesAsync(cancellationToken);
-        
+
         return Result.Ok();
     }
 }

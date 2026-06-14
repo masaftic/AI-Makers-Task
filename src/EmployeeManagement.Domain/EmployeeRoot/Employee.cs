@@ -6,11 +6,11 @@ namespace EmployeeManagement.Domain.EmployeeRoot;
 
 public class Employee
 {
-    public Guid Id { get; init; }
+    public int Id { get; init; }
     public string FullName { get; private set; } = null!;
     public EmailAddress Email { get; private set; } = null!;
     public MobileNumber MobileNumber { get; private set; } = null!;
-    public Guid? DepartmentId { get; private set; }
+    public int? DepartmentId { get; private set; }
     public Department? Department { get; private set; }
     public string JobTitle { get; private set; } = null!;
     public DateOnly HireDate { get; private set; }
@@ -18,7 +18,7 @@ public class Employee
 
     private Employee() { }
 
-    private Employee(Guid id, string fullName, EmailAddress email, MobileNumber mobileNumber, Guid? departmentId, string jobTitle, DateOnly hireDate, bool isActive)
+    private Employee(int id, string fullName, EmailAddress email, MobileNumber mobileNumber, int? departmentId, string jobTitle, DateOnly hireDate, bool isActive)
     {
         Guard.Against.NullOrEmpty(fullName, nameof(fullName));
         Guard.Against.NullOrEmpty(jobTitle, nameof(jobTitle));
@@ -34,11 +34,11 @@ public class Employee
     }
 
     public static Employee Create(
-        Guid id,
+        int id,
         string fullName,
         EmailAddress email,
         MobileNumber mobileNumber,
-        Guid? departmentId,
+        int? departmentId,
         string jobTitle,
         DateOnly hireDate,
         bool isActive)
@@ -50,7 +50,7 @@ public class Employee
         string fullName,
         EmailAddress email,
         MobileNumber mobileNumber,
-        Guid? departmentId,
+        int? departmentId,
         string jobTitle,
         DateOnly hireDate,
         bool isActive)

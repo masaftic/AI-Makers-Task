@@ -10,7 +10,7 @@ public sealed class EditModel(IDepartmentService departmentService) : PageModel
     [BindProperty]
     public DepartmentFormModel Form { get; set; } = new();
 
-    public async Task<IActionResult> OnGetAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> OnGetAsync(int id, CancellationToken cancellationToken)
     {
         var department = await departmentService.GetByIdAsync(id, cancellationToken);
         if (department is null)
@@ -23,7 +23,7 @@ public sealed class EditModel(IDepartmentService departmentService) : PageModel
     }
 
     public async Task<IActionResult> OnPostAsync(
-        Guid id,
+        int id,
         CancellationToken cancellationToken)
     {
         Form.IsEditMode = true;

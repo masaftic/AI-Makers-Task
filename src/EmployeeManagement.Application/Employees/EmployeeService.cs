@@ -9,21 +9,28 @@ namespace EmployeeManagement.Application.Employees;
 
 public interface IEmployeeService
 {
-    Task<Result<Guid>> CreateAsync(SaveEmployeeDto input, CancellationToken cancellationToken = default);
-    Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<EmployeeDto>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<EmployeeDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<Result> UpdateAsync(Guid id, SaveEmployeeDto input, CancellationToken cancellationToken = default);
+    Task<Result<int>> CreateAsync(SaveEmployeeDto input, CancellationToken cancellationToken = default);
+    Task<Result> DeleteAsync(int id, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<EmployeeDto>> GetAllAsync(
+        string? name = null,
+        int? departmentId = null,
+        CancellationToken cancellationToken = default);
+    Task<EmployeeDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<Result> UpdateAsync(int id, SaveEmployeeDto input, CancellationToken cancellationToken = default);
 }
 
 
 public sealed class EmployeeService(IAppDbContext dbContext) : IEmployeeService
 {
     public async Task<IReadOnlyList<EmployeeDto>> GetAllAsync(
+        string? name = null,
+        int? departmentId = null,
         CancellationToken cancellationToken = default)
     {
         var employees = await dbContext.Employees
             .AsNoTracking()
+            .SearchByName(name)
+            .FilterByDepartment(departmentId)
             .OrderBy(employee => employee.FullName)
             .ToProjection()
             .ToListAsync(cancellationToken);
@@ -32,7 +39,7 @@ public sealed class EmployeeService(IAppDbContext dbContext) : IEmployeeService
     }
 
     public async Task<EmployeeDto?> GetByIdAsync(
-        Guid id,
+        int id,
         CancellationToken cancellationToken = default)
     {
         var employee = await dbContext.Employees
@@ -44,7 +51,7 @@ public sealed class EmployeeService(IAppDbContext dbContext) : IEmployeeService
         return employee?.ToDto();
     }
 
-    public async Task<Result<Guid>> CreateAsync(
+    public async Task<Result<int>> CreateAsync(
         SaveEmployeeDto input,
         CancellationToken cancellationToken = default)
     {
@@ -66,7 +73,7 @@ public sealed class EmployeeService(IAppDbContext dbContext) : IEmployeeService
         }
 
         var employee = Employee.Create(
-            Guid.NewGuid(), input.FullName.Trim(), email, mobileNumber,
+            0, input.FullName.Trim(), email, mobileNumber,
             input.DepartmentId, input.JobTitle.Trim(), input.HireDate, input.IsActive);
 
         await dbContext.Employees.AddAsync(employee, cancellationToken);
@@ -76,7 +83,7 @@ public sealed class EmployeeService(IAppDbContext dbContext) : IEmployeeService
     }
 
     public async Task<Result> UpdateAsync(
-        Guid id,
+        int id,
         SaveEmployeeDto input,
         CancellationToken cancellationToken = default)
     {
@@ -117,7 +124,7 @@ public sealed class EmployeeService(IAppDbContext dbContext) : IEmployeeService
     }
 
     public async Task<Result> DeleteAsync(
-        Guid id,
+        int id,
         CancellationToken cancellationToken = default)
     {
         var employee = await dbContext.Employees.FindAsync([id], cancellationToken);
@@ -135,7 +142,7 @@ public sealed class EmployeeService(IAppDbContext dbContext) : IEmployeeService
     private async Task<List<AppError>> FindConflictsAsync(
         EmailAddress email,
         MobileNumber mobileNumber,
-        Guid? excludingEmployeeId,
+        int? excludingEmployeeId,
         CancellationToken cancellationToken)
     {
         List<AppError> errors = [];

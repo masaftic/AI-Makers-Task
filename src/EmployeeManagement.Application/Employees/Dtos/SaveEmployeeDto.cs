@@ -4,7 +4,7 @@ public sealed record SaveEmployeeDto(
     string FullName,
     string Email,
     string MobileNumber,
-    Guid? DepartmentId,
+    int? DepartmentId,
     string JobTitle,
     DateOnly HireDate,
     bool IsActive);

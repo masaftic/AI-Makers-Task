@@ -1,3 +1,3 @@
 namespace EmployeeManagement.Application.Departments.Dtos;
 
-public sealed record DepartmentDto(Guid Id, string Name);
+public sealed record DepartmentDto(int Id, string Name);

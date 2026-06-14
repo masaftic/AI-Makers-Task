@@ -8,6 +8,27 @@ public static class EmployeeQueryExtensions
 {
     extension(IQueryable<Employee> queryable)
     {
+        public IQueryable<Employee> SearchByName(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return queryable;
+            }
+
+            var term = name.Trim();
+            return queryable.Where(employee => employee.FullName.Contains(term));
+        }
+
+        public IQueryable<Employee> FilterByDepartment(int? departmentId)
+        {
+            if (!departmentId.HasValue)
+            {
+                return queryable;
+            }
+
+            return queryable.Where(employee => employee.DepartmentId == departmentId.Value);
+        }
+
         public IQueryable<EmployeeProjection> ToProjection()
             => queryable.Select(employee => new EmployeeProjection(
                 employee.Id,
@@ -22,7 +43,7 @@ public static class EmployeeQueryExtensions
 
         public Task<bool> EmailExistsAsync(
             EmailAddress email,
-            Guid? excludingEmployeeId = null,
+            int? excludingEmployeeId = null,
             CancellationToken cancellationToken = default)
             => queryable.AnyAsync(
                 employee =>
@@ -33,7 +54,7 @@ public static class EmployeeQueryExtensions
 
         public Task<bool> MobileNumberExistsAsync(
             MobileNumber mobileNumber,
-            Guid? excludingEmployeeId = null,
+            int? excludingEmployeeId = null,
             CancellationToken cancellationToken = default)
             => queryable.AnyAsync(
                 employee =>

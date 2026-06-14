@@ -1,16 +1,16 @@
 using EmployeeManagement.Domain.DepartmentRoot;
 
-namespace EmployeeManagement.Infrastructure.Persistence;
+namespace EmployeeManagement.Infrastructure.Persistence.Seeds;
 
 internal static class DepartmentSeed
 {
     public static readonly Department[] All =
     [
         Department.Create(
-            Guid.Parse("10000000-0000-0000-0000-000000000001"),
+            1,
             "Engineering"),
         Department.Create(
-            Guid.Parse("10000000-0000-0000-0000-000000000002"),
+            2,
             "People")
     ];
 }

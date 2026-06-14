@@ -4,12 +4,12 @@ namespace EmployeeManagement.Domain.DepartmentRoot;
 
 public sealed class Department
 {
-    public Guid Id { get; init; }
+    public int Id { get; init; }
     public string Name { get; private set; } = null!;
 
     private Department() { }
 
-    private Department(Guid id, string name)
+    private Department(int id, string name)
     {
         Guard.Against.NullOrEmpty(name, nameof(name));
 
@@ -17,7 +17,7 @@ public sealed class Department
         Name = name;
     }
 
-    public static Department Create(Guid id, string name) => new(id, name);
+    public static Department Create(int id, string name) => new(id, name);
 
     public void Update(string name)
     {

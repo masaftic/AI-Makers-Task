@@ -26,7 +26,7 @@ public sealed class EmployeeFormModel
     public string MobileNumber { get; set; } = "";
 
     [Display(Name = "Department")]
-    public Guid? DepartmentId { get; set; }
+    public int? DepartmentId { get; set; }
 
     [ValidateNever]
     public IReadOnlyList<DepartmentDto> Departments { get; set; } = [];

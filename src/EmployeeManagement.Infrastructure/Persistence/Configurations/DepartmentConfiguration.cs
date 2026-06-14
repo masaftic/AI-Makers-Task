@@ -1,8 +1,9 @@
 using EmployeeManagement.Domain.DepartmentRoot;
+using EmployeeManagement.Infrastructure.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EmployeeManagement.Infrastructure.Persistence;
+namespace EmployeeManagement.Infrastructure.Persistence.Configurations;
 
 internal sealed class DepartmentConfiguration : IEntityTypeConfiguration<Department>
 {
@@ -11,7 +12,7 @@ internal sealed class DepartmentConfiguration : IEntityTypeConfiguration<Departm
         builder.ToTable("Departments");
 
         builder.HasKey(department => department.Id);
-        builder.Property(department => department.Id).ValueGeneratedNever();
+        builder.Property(department => department.Id).ValueGeneratedOnAdd();
 
         builder.Property(department => department.Name)
             .HasMaxLength(120)

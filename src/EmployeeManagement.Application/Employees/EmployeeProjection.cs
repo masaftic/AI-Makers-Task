@@ -3,11 +3,11 @@ using EmployeeManagement.Domain.EmployeeRoot;
 namespace EmployeeManagement.Application.Employees;
 
 public sealed record EmployeeProjection(
-    Guid Id,
+    int Id,
     string FullName,
     EmailAddress Email,
     MobileNumber MobileNumber,
-    Guid? DepartmentId,
+    int? DepartmentId,
     string? DepartmentName,
     string JobTitle,
     DateOnly HireDate,

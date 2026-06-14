@@ -1,6 +1,7 @@
 using EmployeeManagement.Application.Common;
 using EmployeeManagement.Domain.DepartmentRoot;
 using EmployeeManagement.Domain.EmployeeRoot;
+using EmployeeManagement.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Infrastructure.Persistence;

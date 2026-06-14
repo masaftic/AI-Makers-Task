@@ -17,7 +17,8 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                 name: "Departments",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false)
                 },
                 constraints: table =>
@@ -29,11 +30,12 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
                     MobileNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
-                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DepartmentId = table.Column<int>(type: "int", nullable: true),
                     JobTitle = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
                     HireDate = table.Column<DateOnly>(type: "date", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
@@ -54,8 +56,8 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("10000000-0000-0000-0000-000000000001"), "Engineering" },
-                    { new Guid("10000000-0000-0000-0000-000000000002"), "People" }
+                    { 1, "Engineering" },
+                    { 2, "People" }
                 });
 
             migrationBuilder.InsertData(
@@ -63,9 +65,9 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                 columns: new[] { "Id", "DepartmentId", "Email", "FullName", "HireDate", "IsActive", "JobTitle", "MobileNumber" },
                 values: new object[,]
                 {
-                    { new Guid("20000000-0000-0000-0000-000000000001"), new Guid("10000000-0000-0000-0000-000000000001"), "mona.hassan@example.com", "Mona Hassan", new DateOnly(2022, 3, 14), true, "Senior Software Engineer", "+201001112233" },
-                    { new Guid("20000000-0000-0000-0000-000000000002"), new Guid("10000000-0000-0000-0000-000000000001"), "omar.khalil@example.com", "Omar Khalil", new DateOnly(2023, 7, 2), true, "Product Engineer", "+201002223344" },
-                    { new Guid("20000000-0000-0000-0000-000000000003"), new Guid("10000000-0000-0000-0000-000000000002"), "nour.adel@example.com", "Nour Adel", new DateOnly(2021, 11, 8), false, "People Operations Manager", "+201003334455" }
+                    { 1, 1, "mona.hassan@example.com", "Mona Hassan", new DateOnly(2022, 3, 14), true, "Senior Software Engineer", "+201001112233" },
+                    { 2, 1, "omar.khalil@example.com", "Omar Khalil", new DateOnly(2023, 7, 2), true, "Product Engineer", "+201002223344" },
+                    { 3, 2, "nour.adel@example.com", "Nour Adel", new DateOnly(2021, 11, 8), false, "People Operations Manager", "+201003334455" }
                 });
 
             migrationBuilder.CreateIndex(

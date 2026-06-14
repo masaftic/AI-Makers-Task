@@ -12,7 +12,7 @@ public sealed class EditModel(
     [BindProperty]
     public EmployeeFormModel Form { get; set; } = new();
 
-    public async Task<IActionResult> OnGetAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> OnGetAsync(int id, CancellationToken cancellationToken)
     {
         var employee = await employeeService.GetByIdAsync(id, cancellationToken);
         if (employee is null)
@@ -26,7 +26,7 @@ public sealed class EditModel(
     }
 
     public async Task<IActionResult> OnPostAsync(
-        Guid id,
+        int id,
         CancellationToken cancellationToken)
     {
         Form.IsEditMode = true;

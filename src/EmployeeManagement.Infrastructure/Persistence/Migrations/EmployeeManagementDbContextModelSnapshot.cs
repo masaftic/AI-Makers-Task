@@ -24,8 +24,11 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("EmployeeManagement.Domain.DepartmentRoot.Department", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -42,23 +45,26 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("10000000-0000-0000-0000-000000000001"),
+                            Id = 1,
                             Name = "Engineering"
                         },
                         new
                         {
-                            Id = new Guid("10000000-0000-0000-0000-000000000002"),
+                            Id = 2,
                             Name = "People"
                         });
                 });
 
             modelBuilder.Entity("EmployeeManagement.Domain.EmployeeRoot.Employee", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("DepartmentId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -101,8 +107,8 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("20000000-0000-0000-0000-000000000001"),
-                            DepartmentId = new Guid("10000000-0000-0000-0000-000000000001"),
+                            Id = 1,
+                            DepartmentId = 1,
                             Email = "mona.hassan@example.com",
                             FullName = "Mona Hassan",
                             HireDate = new DateOnly(2022, 3, 14),
@@ -112,8 +118,8 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                         },
                         new
                         {
-                            Id = new Guid("20000000-0000-0000-0000-000000000002"),
-                            DepartmentId = new Guid("10000000-0000-0000-0000-000000000001"),
+                            Id = 2,
+                            DepartmentId = 1,
                             Email = "omar.khalil@example.com",
                             FullName = "Omar Khalil",
                             HireDate = new DateOnly(2023, 7, 2),
@@ -123,8 +129,8 @@ namespace EmployeeManagement.Infrastructure.Persistence.Migrations
                         },
                         new
                         {
-                            Id = new Guid("20000000-0000-0000-0000-000000000003"),
-                            DepartmentId = new Guid("10000000-0000-0000-0000-000000000002"),
+                            Id = 3,
+                            DepartmentId = 2,
                             Email = "nour.adel@example.com",
                             FullName = "Nour Adel",
                             HireDate = new DateOnly(2021, 11, 8),

@@ -1,14 +1,25 @@
 using EmployeeManagement.Application.Employees;
 using EmployeeManagement.Api.Pages.Shared;
+using EmployeeManagement.Application.Departments;
+using EmployeeManagement.Application.Departments.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using EmployeeManagement.Application.Employees.Dtos;
 
 namespace EmployeeManagement.Api.Pages;
 
-public sealed class IndexModel(IEmployeeService employeeService) : PageModel
+public sealed class IndexModel(
+    IEmployeeService employeeService,
+    IDepartmentService departmentService) : PageModel
 {
+    [BindProperty(SupportsGet = true)]
+    public int? DepartmentId { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public string? Name { get; set; }
+
     public IReadOnlyList<EmployeeDto> Employees { get; private set; } = [];
+    public IReadOnlyList<DepartmentDto> Departments { get; private set; } = [];
 
     public ConfirmationModalModel DeleteModal { get; } = new(
         ModalId: "deleteEmployeeModal",
@@ -19,17 +30,18 @@ public sealed class IndexModel(IEmployeeService employeeService) : PageModel
 
     public async Task OnGetAsync(CancellationToken cancellationToken)
     {
-        Employees = await employeeService.GetAllAsync(cancellationToken);
+        Employees = await employeeService.GetAllAsync(Name, DepartmentId, cancellationToken);
+        Departments = await departmentService.GetAllAsync(cancellationToken);
     }
 
     public async Task<IActionResult> OnPostDeleteAsync(
-        Guid id,
+        int id,
         CancellationToken cancellationToken)
     {
         var result = await employeeService.DeleteAsync(id, cancellationToken);
 
         return result.IsError
             ? NotFound()
-            : RedirectToPage();
+            : RedirectToPage(new { name = Name, departmentId = DepartmentId });
     }
 }

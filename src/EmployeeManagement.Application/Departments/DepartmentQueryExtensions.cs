@@ -9,7 +9,7 @@ public static class DepartmentQueryExtensions
     extension(DbSet<Department> departments)
     {
         public ValueTask<Department?> FindByIdAsync(
-            Guid id,
+            int id,
             CancellationToken cancellationToken = default)
             => departments.FindAsync([id], cancellationToken);
     }
@@ -23,7 +23,7 @@ public static class DepartmentQueryExtensions
 
         public Task<bool> NameExistsAsync(
             string name,
-            Guid? excludingDepartmentId = null,
+            int? excludingDepartmentId = null,
             CancellationToken cancellationToken = default)
             => queryable.AnyAsync(
                 department =>
@@ -33,7 +33,7 @@ public static class DepartmentQueryExtensions
                 cancellationToken);
 
         public Task<bool> ExistsAsync(
-            Guid id,
+            int id,
             CancellationToken cancellationToken = default)
             => queryable.AnyAsync(
                 department => department.Id == id,
