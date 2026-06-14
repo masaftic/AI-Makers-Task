@@ -1,20 +1,15 @@
-using EmployeeManagement.Application.Common;
-using EmployeeManagement.Application.Departments;
-using EmployeeManagement.Application.Employees;
-using EmployeeManagement.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using EmployeeManagement.Api.ErrorHandling;
+using EmployeeManagement.Application;
+using EmployeeManagement.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 builder.Services.AddRazorPages();
-
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-builder.Services.AddDbContext<EmployeeManagementDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("EmployeeManagement")));
-builder.Services.AddScoped<IAppDbContext>(services =>
-    services.GetRequiredService<EmployeeManagementDbContext>());
+builder.Services.AddOpenApi();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -23,16 +18,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.MapControllers();
 app.MapRazorPages();
 
-await using (var scope = app.Services.CreateAsyncScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<EmployeeManagementDbContext>();
-    await dbContext.Database.EnsureCreatedAsync();
-}
+await app.Services.InitializeDatabaseAsync();
 
 app.Run();
