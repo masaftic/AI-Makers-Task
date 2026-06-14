@@ -1,6 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using EmployeeManagement.Api.Validation;
+using EmployeeManagement.Application.Departments;
+using EmployeeManagement.Application.Departments.Dtos;
 using EmployeeManagement.Application.Employees;
+using EmployeeManagement.Application.Employees.Dtos;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace EmployeeManagement.Api.Pages.Employees;
 
@@ -21,9 +25,11 @@ public sealed class EmployeeFormModel
     [Display(Name = "Mobile number")]
     public string MobileNumber { get; set; } = "";
 
-    [Required]
-    [Display(Name = "Department ID")]
-    public Guid DepartmentId { get; set; }
+    [Display(Name = "Department")]
+    public Guid? DepartmentId { get; set; }
+
+    [ValidateNever]
+    public IReadOnlyList<DepartmentDto> Departments { get; set; } = [];
 
     [Required]
     [StringLength(120)]

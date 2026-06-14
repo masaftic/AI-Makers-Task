@@ -8,9 +8,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container">
             <a asp-page="/Index" class="navbar-brand">Employee Management</a>
+            <div class="navbar-nav">
+                <a asp-page="/Index" class="nav-link">Employees</a>
+                <a asp-page="/Departments/Index" class="nav-link">Departments</a>
+            </div>
         </div>
     </nav>
     

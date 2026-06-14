@@ -1,18 +1,22 @@
+using EmployeeManagement.Application.Departments;
 using EmployeeManagement.Application.Employees;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EmployeeManagement.Api.Pages.Employees;
 
-public sealed class CreateModel(EmployeeService employeeService) : PageModel
+public sealed class CreateModel(
+    IEmployeeService employeeService,
+    IDepartmentService departmentService) : PageModel
 {
     [BindProperty]
     public EmployeeFormModel Form { get; set; } = new();
 
-    public void OnGet()
+    public async Task OnGetAsync(CancellationToken cancellationToken)
     {
         Form.HireDate = DateOnly.FromDateTime(DateTime.Today);
         Form.IsActive = true;
+        await LoadDepartmentsAsync(cancellationToken);
     }
 
     public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
@@ -21,6 +25,7 @@ public sealed class CreateModel(EmployeeService employeeService) : PageModel
 
         if (!ModelState.IsValid)
         {
+            await LoadDepartmentsAsync(cancellationToken);
             return Page();
         }
 
@@ -28,9 +33,15 @@ public sealed class CreateModel(EmployeeService employeeService) : PageModel
         if (result.IsError)
         {
             ModelState.AddEmployeeErrors(result.Errors);
+            await LoadDepartmentsAsync(cancellationToken);
             return Page();
         }
 
         return RedirectToPage("/Index");
+    }
+
+    private async Task LoadDepartmentsAsync(CancellationToken cancellationToken)
+    {
+        Form.Departments = await departmentService.GetAllAsync(cancellationToken);
     }
 }

@@ -27,7 +27,13 @@
     <div class="row">
         <div class="col-md-6 mb-3">
             <label asp-for="DepartmentId" class="form-label"></label>
-            <input asp-for="DepartmentId" class="form-control" />
+            <select asp-for="DepartmentId" class="form-select">
+                <option value="">Unassigned</option>
+                @foreach (var department in Model.Departments)
+                {
+                    <option value="@department.Id">@department.Name</option>
+                }
+            </select>
             <span asp-validation-for="DepartmentId" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">

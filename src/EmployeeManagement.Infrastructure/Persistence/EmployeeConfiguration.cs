@@ -35,6 +35,11 @@ internal sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .HasMaxLength(120)
             .IsRequired();
 
+        builder.HasOne(employee => employee.Department)
+            .WithMany()
+            .HasForeignKey(employee => employee.DepartmentId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasIndex(employee => employee.Email).IsUnique();
         builder.HasIndex(employee => employee.MobileNumber).IsUnique();
 

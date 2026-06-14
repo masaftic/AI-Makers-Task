@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using EmployeeManagement.Domain.DepartmentRoot;
 
 namespace EmployeeManagement.Domain.EmployeeRoot;
 
@@ -9,14 +10,15 @@ public class Employee
     public string FullName { get; private set; } = null!;
     public EmailAddress Email { get; private set; } = null!;
     public MobileNumber MobileNumber { get; private set; } = null!;
-    public Guid DepartmentId { get; private set; }
+    public Guid? DepartmentId { get; private set; }
+    public Department? Department { get; private set; }
     public string JobTitle { get; private set; } = null!;
     public DateOnly HireDate { get; private set; }
     public bool IsActive { get; private set; }
 
     private Employee() { }
 
-    private Employee(Guid id, string fullName, EmailAddress email, MobileNumber mobileNumber, Guid departmentId, string jobTitle, DateOnly hireDate, bool isActive)
+    private Employee(Guid id, string fullName, EmailAddress email, MobileNumber mobileNumber, Guid? departmentId, string jobTitle, DateOnly hireDate, bool isActive)
     {
         Guard.Against.NullOrEmpty(fullName, nameof(fullName));
         Guard.Against.NullOrEmpty(jobTitle, nameof(jobTitle));
@@ -36,7 +38,7 @@ public class Employee
         string fullName,
         EmailAddress email,
         MobileNumber mobileNumber,
-        Guid departmentId,
+        Guid? departmentId,
         string jobTitle,
         DateOnly hireDate,
         bool isActive)
@@ -48,7 +50,7 @@ public class Employee
         string fullName,
         EmailAddress email,
         MobileNumber mobileNumber,
-        Guid departmentId,
+        Guid? departmentId,
         string jobTitle,
         DateOnly hireDate,
         bool isActive)

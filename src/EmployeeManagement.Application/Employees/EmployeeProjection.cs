@@ -7,7 +7,8 @@ public sealed record EmployeeProjection(
     string FullName,
     EmailAddress Email,
     MobileNumber MobileNumber,
-    Guid DepartmentId,
+    Guid? DepartmentId,
+    string? DepartmentName,
     string JobTitle,
     DateOnly HireDate,
     bool IsActive);

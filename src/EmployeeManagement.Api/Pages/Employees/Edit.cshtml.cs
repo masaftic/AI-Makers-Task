@@ -1,10 +1,13 @@
+using EmployeeManagement.Application.Departments;
 using EmployeeManagement.Application.Employees;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EmployeeManagement.Api.Pages.Employees;
 
-public sealed class EditModel(EmployeeService employeeService) : PageModel
+public sealed class EditModel(
+    IEmployeeService employeeService,
+    IDepartmentService departmentService) : PageModel
 {
     [BindProperty]
     public EmployeeFormModel Form { get; set; } = new();
@@ -18,6 +21,7 @@ public sealed class EditModel(EmployeeService employeeService) : PageModel
         }
 
         Form = EmployeeFormModel.FromDto(employee);
+        await LoadDepartmentsAsync(cancellationToken);
         return Page();
     }
 
@@ -29,6 +33,7 @@ public sealed class EditModel(EmployeeService employeeService) : PageModel
 
         if (!ModelState.IsValid)
         {
+            await LoadDepartmentsAsync(cancellationToken);
             return Page();
         }
 
@@ -41,9 +46,15 @@ public sealed class EditModel(EmployeeService employeeService) : PageModel
             }
 
             ModelState.AddEmployeeErrors(result.Errors);
+            await LoadDepartmentsAsync(cancellationToken);
             return Page();
         }
 
         return RedirectToPage("/Index");
+    }
+
+    private async Task LoadDepartmentsAsync(CancellationToken cancellationToken)
+    {
+        Form.Departments = await departmentService.GetAllAsync(cancellationToken);
     }
 }

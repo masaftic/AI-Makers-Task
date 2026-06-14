@@ -21,6 +21,7 @@
             <tr>
                 <th>Name</th>
                 <th>Job title</th>
+                <th>Department</th>
                 <th>Email</th>
                 <th>Mobile</th>
                 <th>Hire date</th>
@@ -34,6 +35,7 @@
                 <tr>
                     <td class="fw-semibold">@employee.FullName</td>
                     <td>@employee.JobTitle</td>
+                    <td>@(employee.DepartmentName ?? "Unassigned")</td>
                     <td><a href="mailto:@employee.Email">@employee.Email</a></td>
                     <td><a href="tel:@employee.MobileNumber">@employee.MobileNumber</a></td>
                     <td>@employee.HireDate.ToString("dd MMM yyyy")</td>

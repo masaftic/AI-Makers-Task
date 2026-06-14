@@ -15,6 +15,7 @@ internal static class EmployeeModelStateExtensions
             {
                 "Employee.Email.Exists" => "Form.Email",
                 "Employee.MobileNumber.Exists" => "Form.MobileNumber",
+                "Employee.Department.NotFound" => "Form.DepartmentId",
                 _ => "Form" // Form-level errors
             };
 

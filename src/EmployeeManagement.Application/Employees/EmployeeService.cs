@@ -1,33 +1,47 @@
+using EmployeeManagement.Application.Common;
+using EmployeeManagement.Application.Departments;
+using EmployeeManagement.Application.Employees.Dtos;
 using EmployeeManagement.Domain.EmployeeRoot;
 using EmployeeManagement.Domain.Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Application.Employees;
 
-public sealed class EmployeeService(IEmployeeRepository employeeRepository)
+public interface IEmployeeService
+{
+    Task<Result<Guid>> CreateAsync(SaveEmployeeDto input, CancellationToken cancellationToken = default);
+    Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<EmployeeDto>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<EmployeeDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Result> UpdateAsync(Guid id, SaveEmployeeDto input, CancellationToken cancellationToken = default);
+}
+
+
+public sealed class EmployeeService(IAppDbContext dbContext) : IEmployeeService
 {
     public async Task<IReadOnlyList<EmployeeDto>> GetAllAsync(
         CancellationToken cancellationToken = default)
     {
-        var employees = await employeeRepository.GetAllAsync(cancellationToken);
+        var employees = await dbContext.Employees
+            .AsNoTracking()
+            .OrderBy(employee => employee.FullName)
+            .ToProjection()
+            .ToListAsync(cancellationToken);
 
-        return employees
-            .Select(employee => new EmployeeDto(
-                employee.Id, employee.FullName, employee.Email.Value, employee.MobileNumber.Value,
-                employee.DepartmentId, employee.JobTitle, employee.HireDate, employee.IsActive))
-            .ToList();
+        return employees.Select(employee => employee.ToDto()).ToList();
     }
 
     public async Task<EmployeeDto?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)
     {
-        var employee = await employeeRepository.GetByIdAsync(id, cancellationToken);
+        var employee = await dbContext.Employees
+            .AsNoTracking()
+            .Where(employee => employee.Id == id)
+            .ToProjection()
+            .SingleOrDefaultAsync(cancellationToken);
 
-        return employee is null
-            ? null
-            : new EmployeeDto(
-                employee.Id, employee.FullName, employee.Email.Value, employee.MobileNumber.Value,
-                employee.DepartmentId, employee.JobTitle, employee.HireDate, employee.IsActive);
+        return employee?.ToDto();
     }
 
     public async Task<Result<Guid>> CreateAsync(
@@ -38,6 +52,14 @@ public sealed class EmployeeService(IEmployeeRepository employeeRepository)
         var mobileNumber = MobileNumber.Create(input.MobileNumber);
         var conflicts = await FindConflictsAsync(email, mobileNumber, null, cancellationToken);
 
+        if (input.DepartmentId.HasValue &&
+            !await dbContext.Departments.ExistsAsync(input.DepartmentId.Value, cancellationToken))
+        {
+            conflicts.Add(AppError.Validation(
+                "Employee.Department.NotFound",
+                "Select an existing department."));
+        }
+
         if (conflicts.Count > 0)
         {
             return conflicts;
@@ -47,8 +69,8 @@ public sealed class EmployeeService(IEmployeeRepository employeeRepository)
             Guid.NewGuid(), input.FullName.Trim(), email, mobileNumber,
             input.DepartmentId, input.JobTitle.Trim(), input.HireDate, input.IsActive);
 
-        await employeeRepository.AddAsync(employee, cancellationToken);
-        await employeeRepository.SaveChangesAsync(cancellationToken);
+        await dbContext.Employees.AddAsync(employee, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return employee.Id;
     }
@@ -58,7 +80,7 @@ public sealed class EmployeeService(IEmployeeRepository employeeRepository)
         SaveEmployeeDto input,
         CancellationToken cancellationToken = default)
     {
-        var employee = await employeeRepository.GetForUpdateAsync(id, cancellationToken);
+        var employee = await dbContext.Employees.FindAsync([id], cancellationToken);
         if (employee is null)
         {
             return AppError.NotFound("Employee.NotFound", "Employee not found.");
@@ -67,6 +89,14 @@ public sealed class EmployeeService(IEmployeeRepository employeeRepository)
         var email = EmailAddress.Create(input.Email);
         var mobileNumber = MobileNumber.Create(input.MobileNumber);
         var conflicts = await FindConflictsAsync(email, mobileNumber, id, cancellationToken);
+
+        if (input.DepartmentId.HasValue &&
+            !await dbContext.Departments.ExistsAsync(input.DepartmentId.Value, cancellationToken))
+        {
+            conflicts.Add(AppError.Validation(
+                "Employee.Department.NotFound",
+                "Select an existing department."));
+        }
 
         if (conflicts.Count > 0)
         {
@@ -82,7 +112,7 @@ public sealed class EmployeeService(IEmployeeRepository employeeRepository)
             input.HireDate,
             input.IsActive);
 
-        await employeeRepository.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
         return Result.Ok();
     }
 
@@ -90,14 +120,14 @@ public sealed class EmployeeService(IEmployeeRepository employeeRepository)
         Guid id,
         CancellationToken cancellationToken = default)
     {
-        var employee = await employeeRepository.GetForUpdateAsync(id, cancellationToken);
+        var employee = await dbContext.Employees.FindAsync([id], cancellationToken);
         if (employee is null)
         {
             return AppError.NotFound("Employee.NotFound", "Employee not found.");
         }
 
-        employeeRepository.Remove(employee);
-        await employeeRepository.SaveChangesAsync(cancellationToken);
+        dbContext.Employees.Remove(employee);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return Result.Ok();
     }
@@ -110,13 +140,13 @@ public sealed class EmployeeService(IEmployeeRepository employeeRepository)
     {
         List<AppError> errors = [];
 
-        if (await employeeRepository.EmailExistsAsync(
+        if (await dbContext.Employees.EmailExistsAsync(
                 email, excludingEmployeeId, cancellationToken))
         {
             errors.Add(AppError.Conflict("Employee.Email.Exists", "Email is already in use."));
         }
 
-        if (await employeeRepository.MobileNumberExistsAsync(
+        if (await dbContext.Employees.MobileNumberExistsAsync(
                 mobileNumber, excludingEmployeeId, cancellationToken))
         {
             errors.Add(AppError.Conflict(

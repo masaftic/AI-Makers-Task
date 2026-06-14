@@ -2,10 +2,11 @@ using EmployeeManagement.Application.Employees;
 using EmployeeManagement.Api.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using EmployeeManagement.Application.Employees.Dtos;
 
 namespace EmployeeManagement.Api.Pages;
 
-public sealed class IndexModel(EmployeeService employeeService) : PageModel
+public sealed class IndexModel(IEmployeeService employeeService) : PageModel
 {
     public IReadOnlyList<EmployeeDto> Employees { get; private set; } = [];
 
