@@ -45,6 +45,11 @@ public sealed class EmployeeRepository(EmployeeManagementDbContext dbContext)
         await dbContext.Employees.AddAsync(employee, cancellationToken);
     }
 
+    public void Remove(Employee employee)
+    {
+        dbContext.Employees.Remove(employee);
+    }
+
     public Task<bool> EmailExistsAsync(
         EmailAddress email,
         Guid? excludingEmployeeId = null,

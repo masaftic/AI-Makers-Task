@@ -17,6 +17,8 @@ public interface IEmployeeRepository
 
     Task AddAsync(Employee employee, CancellationToken cancellationToken = default);
 
+    void Remove(Employee employee);
+
     Task<bool> EmailExistsAsync(
         EmailAddress email,
         Guid? excludingEmployeeId = null,

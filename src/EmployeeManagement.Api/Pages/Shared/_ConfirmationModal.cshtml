@@ -1,0 +1,31 @@
+@model EmployeeManagement.Api.Pages.Shared.ConfirmationModalModel
+
+<div class="modal fade" id="@Model.ModalId" tabindex="-1"
+    aria-labelledby="@(Model.ModalId)Label" aria-hidden="true"
+    data-confirmation-modal>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="@(Model.ModalId)Label">@Model.Title</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">
+                    @Model.Message
+                    <strong data-confirmation-name></strong>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cancel</button>
+                <form method="post" asp-page-handler="@Model.Handler">
+                    <input type="hidden" name="id" data-confirmation-id />
+                    <button type="submit" class="btn @Model.ConfirmButtonClass">
+                        @Model.ConfirmButtonText
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

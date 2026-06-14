@@ -1,0 +1,62 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h3 mb-1">Employees</h1>
+        <p class="text-secondary mb-0">Team directory</p>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <span class="text-secondary">@Model.Employees.Count employees</span>
+        <a asp-page="/Employees/Create" class="btn btn-primary">Create employee</a>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Job title</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Hire date</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td class="fw-semibold">@employee.FullName</td>
+                    <td>@employee.JobTitle</td>
+                    <td><a href="mailto:@employee.Email">@employee.Email</a></td>
+                    <td><a href="tel:@employee.MobileNumber">@employee.MobileNumber</a></td>
+                    <td>@employee.HireDate.ToString("dd MMM yyyy")</td>
+                    <td>
+                        <span class="badge @(employee.IsActive ? "text-bg-success" : "text-bg-secondary")">
+                            @(employee.IsActive ? "Active" : "Inactive")
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <a asp-page="/Employees/Edit" asp-route-id="@employee.Id"
+                           class="btn btn-sm btn-outline-primary">Edit</a>
+                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#@Model.DeleteModal.ModalId"
+                                data-confirmation-id="@employee.Id"
+                                data-confirmation-name="@employee.FullName">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<partial name="_ConfirmationModal" model="Model.DeleteModal" />

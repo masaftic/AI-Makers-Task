@@ -86,6 +86,22 @@ public sealed class EmployeeService(IEmployeeRepository employeeRepository)
         return Result.Ok();
     }
 
+    public async Task<Result> DeleteAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var employee = await employeeRepository.GetForUpdateAsync(id, cancellationToken);
+        if (employee is null)
+        {
+            return AppError.NotFound("Employee.NotFound", "Employee not found.");
+        }
+
+        employeeRepository.Remove(employee);
+        await employeeRepository.SaveChangesAsync(cancellationToken);
+
+        return Result.Ok();
+    }
+
     private async Task<List<AppError>> FindConflictsAsync(
         EmailAddress email,
         MobileNumber mobileNumber,

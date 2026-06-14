@@ -1,0 +1,12 @@
+@page "{id:guid}"
+@model EmployeeManagement.Api.Pages.Employees.EditModel
+@{
+    ViewData["Title"] = "Edit employee";
+}
+
+<partial name="_EmployeeForm" for="Form" />
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
