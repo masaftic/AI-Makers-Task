@@ -15,6 +15,33 @@ Framework Core, SQL Server, and Bootstrap.
 
 This project uses Razor Pages only. It does not expose a Web API.
 
+## Screenshots
+
+### Employee Directory
+
+![Employee directory with search, department filtering, and employee actions](screenshots/employees.png)
+
+<details>
+<summary>View more screenshots</summary>
+
+### Edit Employee
+
+![Edit employee form](screenshots/edit-employee.png)
+
+### Delete Employee
+
+![Delete employee confirmation](screenshots/delete-employee.png)
+
+### Departments
+
+![Department list](screenshots/departments.png)
+
+### Create Department
+
+![Create department form](screenshots/create-department.png)
+
+</details>
+
 ## Requirements
 
 - .NET 10 SDK
