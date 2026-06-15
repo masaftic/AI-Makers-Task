@@ -1,0 +1,16 @@
+@model EmployeeManagement.Web.Pages.Departments.DepartmentFormModel
+
+<h1 class="h3 mb-4">@Model.Heading</h1>
+
+<form method="post" class="col-lg-7">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">@Model.SubmitButtonText</button>
+    <a asp-page="/Departments/Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

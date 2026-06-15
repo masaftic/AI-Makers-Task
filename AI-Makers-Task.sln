@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagement.Api", "src\EmployeeManagement.Api\EmployeeManagement.Api.csproj", "{9CE87B7E-2A41-428A-94EF-639452B9051E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagement.Web", "src\EmployeeManagement.Web\EmployeeManagement.Web.csproj", "{9CE87B7E-2A41-428A-94EF-639452B9051E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagement.Application", "src\EmployeeManagement.Application\EmployeeManagement.Application.csproj", "{D275B3ED-3C85-41C1-9B9F-7FA8F43004FF}"
 EndProject

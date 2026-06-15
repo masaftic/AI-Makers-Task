@@ -23,7 +23,7 @@ This project uses Razor Pages only. It does not expose a Web API.
 ## Database
 
 You can use your own SQL Server instance. Update the `EmployeeManagement`
-connection string in `src/EmployeeManagement.Api/appsettings.json` if needed.
+connection string in `src/EmployeeManagement.Web/appsettings.json` if needed.
 
 The development connection string included with the project is:
 
@@ -45,7 +45,7 @@ The application creates the database and seed data when it starts.
 From the repository root:
 
 ```bash
-dotnet run --project src/EmployeeManagement.Api
+dotnet run --project src/EmployeeManagement.Web
 ```
 
 Open the URL printed by the application.
